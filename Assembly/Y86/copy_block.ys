@@ -1,0 +1,71 @@
+.pos 0
+init:
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    jmp Main
+
+.align 4
+# Source block
+src:
+    .long 0x00a
+    .long 0x0b0
+    .long 0xc00
+# Destination
+dest:
+    .long 0x111
+    .long 0x222
+    .long 0x333
+
+copy_block: # %eax: result, %ebx: val, %ecx: len, %esi: src, %edi: dest
+    pushl %ebp
+    rrmovl %esp, %ebp
+
+    pushl %esi # save callee-saved register
+    pushl %edi
+    pushl %ebx
+
+    mrmovl 16(%ebp), %ecx # len
+    mrmovl 12(%ebp), %edi # dest
+    mrmovl 8(%ebp), %esi # src
+
+    irmovl 0, %eax # result = 0
+
+copy_block_while:
+    andl %ecx, %ecx # while (len > 0)
+    je copy_block_return
+    
+    mrmovl (%esi), %ebx # val = *src++
+    irmovl $4, %edx
+    addl %edx, %esi
+
+    rmmovl %ebx, (%edi) # *dest++ = val
+    addl %edx, %edi
+
+    xorl %ebx, %eax # result ^= val
+
+    irmovl $1, %edx # len--
+    subl %edx, %ecx
+    jmp copy_block_while
+
+copy_block_return:
+    popl %ebx # restore callee-saved register
+    popl %edi
+    popl %esi
+
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+Main:
+    irmovl $3, %eax
+    irmovl dest, %ecx
+    irmovl src, %edx
+    pushl %eax
+    pushl %ecx
+    pushl %edx
+
+    call copy_block
+    halt
+
+.pos 0x800
+Stack:

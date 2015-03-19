@@ -1,0 +1,53 @@
+.pos 0
+init:
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    jmp Main
+
+# Sample linked list
+.align 4
+ele1:
+    .long 0x00a
+    .long ele2
+ele2:
+    .long 0x0b0
+    .long ele3
+ele3:
+    .long 0xc00
+    .long 0
+
+rsum_list: # %eax: val, %ecx: ls, %edx: ls->val
+    pushl %ebp
+    rrmovl %esp, %ebp
+
+    irmovl $0, %eax
+    mrmovl 8(%ebp), %ecx # list_ptr ls
+
+    andl %ecx, %ecx # if (!ls)
+    je rsum_list_return
+
+    mrmovl (%ecx), %edx # ls->val
+    pushl %edx # save ls->val
+
+    mrmovl 4(%ecx), %ecx # ls->next
+    pushl %ecx
+
+    call rsum_list
+
+    popl %edx # remove argument
+    popl %ecx
+    addl %ecx, %eax # return val + rest
+
+rsum_list_return:
+    rrmovl %ebp, %esp
+    popl %ebp
+    ret
+
+Main:
+    irmovl ele1,%ecx
+    pushl %ecx
+    call rsum_list
+    halt
+
+.pos 0x800
+Stack:
