@@ -1,0 +1,14 @@
+call by value
+0
+call by value2
+0
+call by reference
+0
+1
+call by reference2
+1
+call by sharing
+0
+1
+call by sharing2
+0
