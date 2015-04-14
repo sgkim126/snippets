@@ -1,0 +1,10 @@
+Call by Reference
+0
+1
+Call by Reference2
+1
+Call by Sharing
+0
+1
+Call by Sharing2
+0
