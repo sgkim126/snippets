@@ -1,14 +1,20 @@
 #if defined(__GNUC__)
 
 #define INLINE inline __attribute__((__always_inline__))
+#define LIKELY(x) __builtin_expect(!!(x), 1)
+#define UNLIKELY(x) __builtin_expect(!!(x), 0)
 
 #elif defined(_MSC_VER)
 
 #define INLINE __forceinline
+#define LIKELY(x) (x)
+#define UNLIKELY(x) (x)
 
 #else
 
 #define INLINE inline
+#define LIKELY(x) (x)
+#define UNLIKELY(x) (x)
 
 #endif
 
@@ -65,8 +71,10 @@ typedef struct {
 
 void insert(sitem_t* sp, int item)
 {
-    while (sp->is_set) {
-        yield();
+    if (UNLIKELY(sp->is_set)) {
+        while (LIKELY(sp->is_set)) {
+            yield();
+        }
     }
 
     sp->item = item;
@@ -78,8 +86,10 @@ int remove(sitem_t* sp)
 {
     int item;
 
-    while (!sp->is_set) {
-        yield();
+    if (UNLIKELY(!sp->is_set)) {
+        while (LIKELY(!sp->is_set)) {
+            yield();
+        }
     }
 
     item = sp->item;
