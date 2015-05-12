@@ -1,9 +1,18 @@
-#if defined(WIN32) || defined(__MINGW32__)
+#if defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0400
 
-#include <windows.h>
+#if _WIN32_WINNT > 0x0602 // Windows 8
+#include <Processthreadsapi.h>
+#else
+#define WIN32_LEAN_NO_MEAN
+#define NOMINMAX
+#include <Windows.h>
+#undef NOMINMAX
+#undef WIN32_LEAN_NO_MEAN
+#endif
+
 static inline void yield()
 {
-    Sleep(0);
+    SwitchToThread();
 }
 
 #elif defined(__APPLE__) || defined(__linux__)
