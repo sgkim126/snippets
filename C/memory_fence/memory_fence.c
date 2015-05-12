@@ -1,3 +1,18 @@
+#if defined(__GNUC__)
+
+#define INLINE inline __attribute__((__always_inline__))
+
+#elif defined(_MSC_VER)
+
+#define INLINE __forceinline
+
+#else
+
+#define INLINE inline
+
+#endif
+
+
 #if defined(_WIN32_WINNT) && _WIN32_WINNT >= 0x0400
 
 #if _WIN32_WINNT > 0x0602 // Windows 8
@@ -10,7 +25,7 @@
 #undef WIN32_LEAN_NO_MEAN
 #endif
 
-static inline void yield()
+static INLINE void yield()
 {
     SwitchToThread();
 }
@@ -18,7 +33,7 @@ static inline void yield()
 #elif defined(__APPLE__) || defined(__linux__)
 
 #include <sched.h>
-static inline void yield()
+static INLINE void yield()
 {
     sched_yield();
 }
@@ -30,7 +45,7 @@ static inline void yield()
 #endif
 
 
-static inline void memory_fence(void)
+static INLINE void memory_fence(void)
 {
 #if defined(__GNUC__)
     __sync_synchronize();
