@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <getopt.h>
+#include <semaphore.h>
 
 static void print_usage(FILE* out, const char* const name) {
   fprintf(out, "Usage: %s [options]\n", name);
@@ -99,6 +100,15 @@ void increase_with_cpp11(uint32_t n) {
   }
 }
 
+static sem_t semaphore;
+void increase_with_semaphore(uint32_t n) {
+  for (uint32_t i = 0; i < n; i += 1) {
+    sem_wait(&semaphore);
+    g_count += 1;
+    sem_post(&semaphore);
+  }
+}
+
 int main(int argc, char * const argv[]) {
   const auto&& config = parse_argument(argc, argv);
 
@@ -108,6 +118,13 @@ int main(int argc, char * const argv[]) {
     std::mutex mutex;
     for (size_t i = 0; i < config.number_of_threads; i += 1) {
       threads.emplace_back(increase_with_cpp11, config.number_to_add / config.number_of_threads);
+    }
+    break;
+  }
+  case ::lock_type::semaphore: {
+    sem_init(&semaphore, 0, 1);
+    for (size_t i = 0; i < config.number_of_threads; i += 1) {
+      threads.emplace_back(increase_with_semaphore, config.number_to_add / config.number_of_threads);
     }
     break;
   }
