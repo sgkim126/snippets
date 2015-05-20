@@ -10,6 +10,29 @@
 #include <getopt.h>
 #include <semaphore.h>
 
+
+#if defined(__GNUC__)
+#define INLINE inline __attribute__((__always_inline__))
+#elif defined(_MSC_VER)
+#define INLINE __forceinline
+#else
+#define INLINE inline
+#endif
+
+static INLINE void memory_fence(void)
+{
+#if defined(__GNUC__)
+    __sync_synchronize();
+#elif defined(__llvm__)
+    __sync_synchronize();
+#elif defined(_MSC_VER)
+    _mm_mfence();
+#else
+#error This compiler is not supported.
+#endif
+}
+
+
 static void print_usage(FILE* out, const char* const name) {
   fprintf(out, "Usage: %s [options]\n", name);
   fprintf(out, "option:\n");
@@ -97,6 +120,55 @@ static config parse_argument(int argc, char * const argv[]) {
 }
 
 static uint32_t g_count =0;
+
+
+static uint32_t* filter_level;
+static uint32_t* filter_victim;
+static uint32_t filter_n;
+
+static bool filter_condition(const uint32_t& tid, const uint32_t& L) {
+  for (uint32_t k = 0; k < filter_n; k += 1) {
+    if (k == tid) {
+      continue;
+    }
+    memory_fence();
+    if (filter_level[k] >= L) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static void filter_lock(uint32_t tid) {
+  for (uint32_t L = 1; L < filter_n; L += 1) {
+    filter_level[tid] = L;
+    filter_victim[L] = tid;
+
+    while (true) {
+      if (!filter_condition(tid, L)) {
+        break;
+      }
+      memory_fence();
+      if (filter_victim[L] != tid) {
+        break;
+      }
+    }
+  }
+}
+
+static void filter_unlock(uint32_t tid) {
+  filter_level[tid] = 0;
+}
+
+void increase_with_filter(uint32_t tid, uint32_t n) {
+  for (uint32_t i = 0; i < n; i += 1) {
+    filter_lock(tid);
+    g_count += 1;
+    filter_unlock(tid);
+  }
+}
+
+
 static std::mutex mutex;
 void increase_with_cpp11(uint32_t n) {
   for (uint32_t i = 0; i < n; i += 1) {
@@ -133,6 +205,15 @@ int main(int argc, char * const argv[]) {
 
   std::vector<std::thread> threads;
   switch (config.lock_type) {
+  case ::lock_type::filter: {
+    filter_n = config.number_of_threads;
+    filter_level = new uint32_t[filter_n];
+    filter_victim = new uint32_t[filter_n];
+    for (size_t i = 0; i < config.number_of_threads; i += 1) {
+      threads.emplace_back(increase_with_filter, i, config.number_to_add / config.number_of_threads);
+    }
+    break;
+  }
   case ::lock_type::cpp11: {
     std::mutex mutex;
     for (size_t i = 0; i < config.number_of_threads; i += 1) {
