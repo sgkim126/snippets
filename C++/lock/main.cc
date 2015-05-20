@@ -38,12 +38,12 @@ static void print_usage(FILE* out, const char* const name) {
   fprintf(out, "option:\n");
   fprintf(out, "\t-t {number}\tthe number of threads (default is 8)\n");
   fprintf(out, "\t-n {number}\tthe number to add (default is 1,000,000\n");
-  fprintf(out, "\t-l [semaphore|filter|cpp11|buggy|atomic]\tthe type of lock (default is semaphore)\n");
+  fprintf(out, "\t-l [pthread|filter|cpp11|buggy|atomic]\tthe type of lock (default is pthread)\n");
   fprintf(out, "\t-h\tprint this message\n");
 }
 
 enum class lock_type {
-  semaphore, filter, cpp11, buggy, atomic
+  pthread, filter, cpp11, buggy, atomic
 };
 
 struct config {
@@ -54,7 +54,7 @@ struct config {
   config()
       : number_of_threads(8),
       number_to_add(1000000),
-      lock_type(::lock_type::semaphore) {
+      lock_type(::lock_type::pthread) {
   }
 
   config(uint32_t number_of_threads, uint32_t number_to_add, ::lock_type lock_type)
@@ -90,8 +90,8 @@ static config parse_argument(int argc, char * const argv[]) {
   }
   case 'l': {
     std::string opt_lock_type(optarg);
-    if (opt_lock_type == "semaphore") {
-      config.lock_type = ::lock_type::semaphore;
+    if (opt_lock_type == "pthread") {
+      config.lock_type = ::lock_type::pthread;
     } else if (opt_lock_type == "filter") {
       config.lock_type = ::lock_type::filter;
     } else if (opt_lock_type == "cpp11") {
@@ -220,7 +220,7 @@ int main(int argc, char * const argv[]) {
     }
     break;
   }
-  case ::lock_type::semaphore: {
+  case ::lock_type::pthread: {
     sem_init(&semaphore, 0, 1);
     for (size_t i = 0; i < config.number_of_threads; i += 1) {
       threads.emplace_back(increase_with_semaphore, config.number_to_add / config.number_of_threads);
