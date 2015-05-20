@@ -1,5 +1,5 @@
 CC := clang++
-CCFLAGS := -std=c++11 -Wall -Wextra
+CCFLAGS := -std=c++11 -Wall -Wextra -O2
 LDFLAGS := -pthread
 OBJS = main.o
 

@@ -14,12 +14,12 @@ static void print_usage(FILE* out, const char* const name) {
   fprintf(out, "option:\n");
   fprintf(out, "\t-t {number}\tthe number of threads (default is 8)\n");
   fprintf(out, "\t-n {number}\tthe number to add (default is 1,000,000\n");
-  fprintf(out, "\t-l [semaphore|filter|cpp11]\tthe type of lock (default is semaphore)\n");
+  fprintf(out, "\t-l [semaphore|filter|cpp11|buggy]\tthe type of lock (default is semaphore)\n");
   fprintf(out, "\t-h\tprint this message\n");
 }
 
 enum class lock_type {
-  semaphore, filter, cpp11
+  semaphore, filter, cpp11, buggy
 };
 
 struct config {
@@ -72,6 +72,8 @@ static config parse_argument(int argc, char * const argv[]) {
       config.lock_type = ::lock_type::filter;
     } else if (opt_lock_type == "cpp11") {
       config.lock_type = ::lock_type::cpp11;
+    } else if (opt_lock_type == "buggy") {
+      config.lock_type = ::lock_type::buggy;
     } else {
       print_usage(stderr, argv[0]);
       exit(-1);
@@ -109,6 +111,12 @@ void increase_with_semaphore(uint32_t n) {
   }
 }
 
+void increase_with_buggy_implementation(uint32_t n) {
+  for (uint32_t i = 0; i < n; i += 1) {
+    g_count += 1;
+  }
+}
+
 int main(int argc, char * const argv[]) {
   const auto&& config = parse_argument(argc, argv);
 
@@ -125,6 +133,12 @@ int main(int argc, char * const argv[]) {
     sem_init(&semaphore, 0, 1);
     for (size_t i = 0; i < config.number_of_threads; i += 1) {
       threads.emplace_back(increase_with_semaphore, config.number_to_add / config.number_of_threads);
+    }
+    break;
+  }
+  case ::lock_type::buggy: {
+    for (size_t i = 0; i < config.number_of_threads; i += 1) {
+      threads.emplace_back(increase_with_buggy_implementation, config.number_to_add / config.number_of_threads);
     }
     break;
   }
