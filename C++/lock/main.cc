@@ -1,3 +1,4 @@
+#include <atomic>
 #include <cassert>
 #include <cstdint>
 #include <cstdio>
@@ -14,12 +15,12 @@ static void print_usage(FILE* out, const char* const name) {
   fprintf(out, "option:\n");
   fprintf(out, "\t-t {number}\tthe number of threads (default is 8)\n");
   fprintf(out, "\t-n {number}\tthe number to add (default is 1,000,000\n");
-  fprintf(out, "\t-l [semaphore|filter|cpp11|buggy]\tthe type of lock (default is semaphore)\n");
+  fprintf(out, "\t-l [semaphore|filter|cpp11|buggy|atomic]\tthe type of lock (default is semaphore)\n");
   fprintf(out, "\t-h\tprint this message\n");
 }
 
 enum class lock_type {
-  semaphore, filter, cpp11, buggy
+  semaphore, filter, cpp11, buggy, atomic
 };
 
 struct config {
@@ -74,6 +75,8 @@ static config parse_argument(int argc, char * const argv[]) {
       config.lock_type = ::lock_type::cpp11;
     } else if (opt_lock_type == "buggy") {
       config.lock_type = ::lock_type::buggy;
+    } else if (opt_lock_type == "atomic") {
+      config.lock_type = ::lock_type::atomic;
     } else {
       print_usage(stderr, argv[0]);
       exit(-1);
@@ -117,6 +120,14 @@ void increase_with_buggy_implementation(uint32_t n) {
   }
 }
 
+
+static std::atomic<uint32_t> g_atomic_count;
+void increase_with_atomic(uint32_t n) {
+  for (uint32_t i = 0; i < n; i += 1) {
+    g_atomic_count += 1;
+  }
+}
+
 int main(int argc, char * const argv[]) {
   const auto&& config = parse_argument(argc, argv);
 
@@ -142,6 +153,12 @@ int main(int argc, char * const argv[]) {
     }
     break;
   }
+  case ::lock_type::atomic: {
+    for (size_t i = 0; i < config.number_of_threads; i += 1) {
+      threads.emplace_back(increase_with_atomic, config.number_to_add / config.number_of_threads);
+    }
+    break;
+  }
   default:
     assert(false);
     break;
@@ -151,7 +168,11 @@ int main(int argc, char * const argv[]) {
     thread.join();
   }
 
-  printf("Count: %u\n", g_count);
+  if (config.lock_type == ::lock_type::atomic) {
+    printf("Count: %u (%s)\n", static_cast<uint32_t>(g_atomic_count), g_atomic_count.is_lock_free() ? "true" : "false");
+  } else {
+    printf("Count: %u\n", g_count);
+  }
 
   return 0;
 }
