@@ -126,26 +126,25 @@ static uint32_t* filter_level;
 static uint32_t* filter_victim;
 static uint32_t filter_n;
 
-static bool filter_condition(const uint32_t& tid, const uint32_t& L) {
-  for (uint32_t k = 0; k < filter_n; k += 1) {
-    if (k == tid) {
-      continue;
-    }
-    memory_fence();
-    if (filter_level[k] >= L) {
-      return true;
-    }
-  }
-  return false;
-}
-
 static void filter_lock(uint32_t tid) {
   for (uint32_t L = 1; L < filter_n; L += 1) {
     filter_level[tid] = L;
     filter_victim[L] = tid;
 
+    const auto&& filter_condition = [&L, &tid]() -> bool {
+      for (uint32_t k = 0; k < filter_n; k += 1) {
+        if (k == tid) {
+          continue;
+        }
+        memory_fence();
+        if (filter_level[k] >= L) {
+          return true;
+        }
+      }
+      return false;
+    };
     while (true) {
-      if (!filter_condition(tid, L)) {
+      if (!filter_condition()) {
         break;
       }
       memory_fence();
