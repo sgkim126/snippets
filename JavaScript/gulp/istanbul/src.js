@@ -1,0 +1,2 @@
+exports.example = function example() {
+}
