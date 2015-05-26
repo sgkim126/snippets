@@ -3,7 +3,7 @@ var istanbul = require('gulp-istanbul');
 var mocha = require('gulp-mocha');
 
 gulp.task("test", function (done) {
-  return gulp.src([ './src.js' ])
+  gulp.src([ './src.js' ])
   .pipe(istanbul())
   .pipe(istanbul.hookRequire())
   .on('finish', function () {
