@@ -1,0 +1,7 @@
+[package]
+name = "window-close"
+version = "0.1.0"
+authors = ["Seulgi Kim <dev@seulgi.kim>"]
+
+[dependencies]
+glutin = { version = "*" }
