@@ -15,3 +15,17 @@ f5.onComplete { x => println(x) } // Success(None)
 
 val f6 = Future.find(Seq(f1, f2))(x => { throw new Exception("b") })
 f6.onComplete { x => println(x) } // Success(None)
+
+val f7 = Future {
+  Thread.sleep(10000)
+  1
+}
+val f8 = Future.successful(2)
+
+val f9a = Future.find(Seq(f7, f8))(x => { true })
+f9a.onComplete { x => println(x) } // Success(Some(2))
+
+Thread.sleep(20000)
+
+val f9b = Future.find(Seq(f7, f8))(x => { true })
+f9b.onComplete { x => println(x) } // Success(Some(1))
