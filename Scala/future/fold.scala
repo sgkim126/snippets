@@ -15,3 +15,14 @@ val f4 = Future.fold(Seq(f1, f2, f3))(0) {
 
 f4.onComplete(println) // Failure(java.lang.Exception: a)
 println(x) // 0
+
+val f5 = Future.successful(1000)
+var y = 0
+val f6 = Future.fold(Seq(f5, f3, f1))(0) {
+  (a, b) => {
+    y += b
+    throw new Exception("b")
+  }
+}
+f6.onComplete(println) // Failure(java.lang.Exception: b)
+println(y) // 1000
