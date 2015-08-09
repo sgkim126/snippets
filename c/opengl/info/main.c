@@ -11,22 +11,24 @@ void print_opengl_information() {
 
     GLint max_stack_depth;
     GLint depth_bits;
+    GLint stencil_bits;
     glGetIntegerv(GL_MAX_MODELVIEW_STACK_DEPTH, &max_stack_depth);
     glGetIntegerv(GL_DEPTH_BITS, &depth_bits);
+    glGetIntegerv(GL_STENCIL_BITS, &stencil_bits);
 
     printf("Version: %s\n", version);
     printf("Vendor: %s\n", vendor);
     printf("Renderer: %s\n", renderer);
     printf("max stack depth: %d\n", max_stack_depth);
     printf("depth bits: %d\n", depth_bits);
+    printf("stencil bits: %d\n", stencil_bits);
 }
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
 
     glutCreateWindow("Test");
-
 
     print_opengl_information();
 }
