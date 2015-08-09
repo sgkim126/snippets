@@ -15,7 +15,7 @@ var gl;
 
 function initGL(canvas) {
   try {
-    gl = canvas.getContext("experimental-webgl");
+    gl = canvas.getContext("experimental-webgl", { preserveDrawingBuffer: true, stencil: true });
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
   } catch (e) {
@@ -209,13 +209,24 @@ function loadTeapot() {
   request.send();
 }
 
+function initClickEvent(canvas) {
+  canvas.addEventListener('click', function (e) {
+    var x = e.clientX - canvas.offsetLeft;
+    var y = canvas.height - (e.clientY - canvas.offsetTop);
+
+    var buf = new Float32Array (4);
+    console.log(gl.readPixels(x, y, 1, 1, gl.STENCIL_INDEX, gl.FLOAT, buf));
+    console.log("%d %d", x, y, buf[0], buf[1], buf[2], buf[3]);
+  });
+}
+
 
 var teapotAngle = 180;
 
 
 function drawScene() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT, gl.STENCIL_BUFFER_BIT);
 
   if (teapotVertexPositionBuffer == null || teapotVertexNormalBuffer == null || teapotVertexTextureCoordBuffer == null || teapotVertexIndexBuffer == null) {
     return;
@@ -288,6 +299,7 @@ function drawScene() {
 
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
   setMatrixUniforms();
+
   gl.drawElements(gl.TRIANGLES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
 }
 
@@ -319,8 +331,15 @@ function webGLStart() {
   initTextures();
   loadTeapot();
 
+  initClickEvent(canvas);
+
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
+
+  gl.enable(gl.STENCIL_TEST);
+  gl.clearStencil(0);
+  gl.stencilFunc(gl.NEVER, 0, 0);
+  gl.stencilOp(gl.INCR, gl.INCR, gl.INCR);
 
   tick();
 }
