@@ -9,10 +9,11 @@ type A struct {
 	A int
 	B string
 	C bool
+	D []int
 }
 
 func main() {
-	a := A{10324, "xyz", true}
+	a := A{10324, "xyz", true, []int{1, 2, 3, 4, 5, 6}}
 	j, err := json.Marshal(a)
 	if err != nil {
 		fmt.Errorf(":%v:\n", err)
