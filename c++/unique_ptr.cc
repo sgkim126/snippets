@@ -21,8 +21,9 @@ int main(void) {
   printf("%p %s\n", a.get(), a ? "true" : "false");
   printf("%p %s\n", b.get(), b ? "true" : "false");
 
-  b = std::unique_ptr<A>(new A(1));
+  b.reset(new A(1));
 
   a = std::unique_ptr<A>(new A(2)); 
+  b.reset(new A(3));
   return 0;
 }
