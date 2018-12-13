@@ -1,0 +1,7 @@
+[package]
+name = "read_recursive"
+version = "0.1.0"
+authors = ["Seulgi Kim <dev@seulgi.kim>"]
+
+[dependencies]
+parking_lot = "0.6.0"
