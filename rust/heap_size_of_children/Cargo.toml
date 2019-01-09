@@ -1,0 +1,7 @@
+[package]
+name = "heap_size_of_children"
+version = "0.1.0"
+authors = ["Seulgi Kim <dev@seulgi.kim>"]
+
+[dependencies]
+heapsize = "0.4"
