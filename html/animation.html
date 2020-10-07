@@ -1,0 +1,33 @@
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+<div class="progress">
+  <div class="determinate" id="progress-bar"></div>
+</div>
+<button id="set">set</button>
+<button id="reset">reset</button>
+
+<style>
+.anim {
+    animation-duration: 3s;
+    animation-name: sync-interval;
+}
+
+@keyframes sync-interval {
+  from { width: 0%; }
+  to   { width: 99.99%; }
+}
+
+</style>
+<script>
+window.onload = () => {
+    document.getElementById("set").onclick = () => {
+        document.getElementById("progress-bar").classList.add("anim");
+        document.getElementById("progress-bar").style.width = "100%";
+    };
+    document.getElementById("reset").onclick = () => {
+        document.getElementById("progress-bar").classList.remove("anim");
+        document.getElementById("progress-bar").style.width = "0%";
+    };
+};
+</script>
