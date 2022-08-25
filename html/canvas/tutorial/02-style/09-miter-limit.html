@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>miterLimit</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return false;
+            }
+            const ctx = canvas.getContext('2d');
+
+            // check input
+            if (!document.getElementById('miterLimit').value.match(/\d+(\.\d+)?/)) {
+                alert('Value must be a positive number');
+                return false;
+            }
+            const miterLimit = parseFloat(document.getElementById('miterLimit').value);
+
+            drawInternal(ctx, miterLimit);
+            return false;
+        }
+
+        function drawInternal(ctx, miterLimit) {
+            // Clear canvas
+            ctx.clearRect(0, 0, 150, 150);
+
+            // Draw guides
+            ctx.strokeStyle = '#09f';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-5, 50, 160, 50);
+
+            // Set line styles
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 10;
+            ctx.miterLimit = miterLimit;
+
+            // Draw lines
+            ctx.beginPath();
+            ctx.moveTo(0, 100);
+            for (i = 0; i < 24 ; i++) {
+                const dy = i % 2 === 0 ? 25 : -25;
+                ctx.lineTo(Math.pow(i, 1.5) * 2, 75 + dy);
+            }
+            ctx.stroke();
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+<form onsubmit="return draw();">
+    <label for="miterLimit">Miter limit</label>
+    <input type="number" size="3" id="miterLimit" value="10" onchange="return draw();" />
+</form>
+</body>
+</html>
