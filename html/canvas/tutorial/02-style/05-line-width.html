@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>lineWidth</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            for (let i = 0; i < 10; i++) {
+                ctx.lineWidth = 1 + i;
+                ctx.beginPath();
+                ctx.moveTo(5 + i * 14, 5);
+                ctx.lineTo(5 + i * 14, 140);
+                ctx.stroke();
+            }
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
