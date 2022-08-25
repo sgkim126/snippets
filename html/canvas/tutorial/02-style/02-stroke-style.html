@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>strokeStyle</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 6; j++) {
+                    ctx.strokeStyle = `rgb(0, ${Math.floor(255 - 42.5 * i)}, ${Math.floor(255 - 42.5 * j)})`;
+                    ctx.beginPath();
+                    ctx.arc(12.5 + j * 25, 12.5 + i * 25, 10, 0, Math.PI * 2, true);
+                    ctx.stroke();
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
