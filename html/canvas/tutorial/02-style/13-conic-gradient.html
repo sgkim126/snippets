@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conic Gradients</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            // Create gradients
+            const conicGrad1 = ctx.createConicGradient(2, 62, 75);
+            conicGrad1.addColorStop(0, 'lawngreen');
+            conicGrad1.addColorStop(1, 'white');
+
+            const conicGrad2 = ctx.createConicGradient(0, 187, 75);
+            // we multiple our values by Math.PI/180 to convert degrees to radians
+            conicGrad2.addColorStop(0, 'red');
+            conicGrad2.addColorStop(0.25, 'red');
+            conicGrad2.addColorStop(0.25, 'green');
+            conicGrad2.addColorStop(0.5, 'green');
+            conicGrad2.addColorStop(0.5, 'blue');
+            conicGrad2.addColorStop(0.75, 'blue');
+            conicGrad2.addColorStop(0.75, 'black');
+            conicGrad2.addColorStop(1, 'black');
+
+            // draw shapes
+            ctx.fillStyle = conicGrad1;
+            ctx.fillRect(12, 25, 100, 100);
+            ctx.fillStyle = conicGrad2;
+            ctx.fillRect(137, 25, 100, 100);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="250" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
