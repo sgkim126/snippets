@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patterns</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function get_context(canvas_id) {
+            const canvas = document.getElementById(canvas_id);
+            if (canvas.getContext == null) {
+                return null;
+            }
+            return canvas.getContext('2d');
+        }
+
+        function draw() {
+            const ctx1 = get_context('tutorial1');
+            const ctx2 = get_context('tutorial2');
+            const ctx3 = get_context('tutorial3');
+            const ctx4 = get_context('tutorial4');
+
+            if (ctx1 == null || ctx2 == null || ctx3 == null || ctx4 == null) {
+                return;
+            }
+
+            // create new image object to use as pattern
+            const img = new Image();
+            img.src = 'https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors/canvas_createpattern.png';
+            img.onload = () => {
+                // create pattern
+                const pattern1 = ctx1.createPattern(img, 'repeat');
+                ctx1.fillStyle = pattern1;
+                ctx1.fillRect(0, 0, 200, 200);
+
+                const pattern2 = ctx2.createPattern(img, 'repeat-x');
+                ctx2.fillStyle = pattern2;
+                ctx2.fillRect(0, 0, 200, 200);
+
+                const pattern3 = ctx3.createPattern(img, 'repeat-y');
+                ctx3.fillStyle = pattern3;
+                ctx3.fillRect(0, 0, 200, 200);
+
+                const pattern4 = ctx4.createPattern(img, 'no-repeat');
+                ctx4.fillStyle = pattern4;
+                ctx4.fillRect(0, 0, 200, 200);
+            }
+        }
+    </script>
+</head>
+<body onload="draw();">
+<h2>Original Image</h2>
+<div>
+    <img src="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors/canvas_createpattern.png" />
+</div>
+<h2>repeat</h2>
+<div>
+    <canvas id="tutorial1" width="200" height="200">
+        This browser doesn't support canvas. Please use another browser.
+    </canvas>
+</div>
+
+<h3>repeat-x</h3>
+<div>
+    <canvas id="tutorial2" width="200" height="200">
+        This browser doesn't support canvas. Please use another browser.
+    </canvas>
+</div>
+
+<h3>repeat-y</h3>
+<div>
+    <canvas id="tutorial3" width="200" height="200">
+        This browser doesn't support canvas. Please use another browser.
+    </canvas>
+</div>
+
+<h3>no-repeat</h3>
+<div>
+    <canvas id="tutorial4" width="200" height="200">
+        This browser doesn't support canvas. Please use another browser.
+    </canvas>
+</div>
+</body>
+</html>
