@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fill Rules</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            ctx.beginPath();
+            ctx.arc(50, 50, 30, 0, Math.PI * 2, true);
+            ctx.arc(50, 50, 15, 0, Math.PI * 2, true);
+            ctx.fill('evenodd');
+
+            ctx.beginPath();
+            ctx.arc(140, 50, 30, 0, Math.PI * 2, true);
+            ctx.arc(140, 50, 15, 0, Math.PI * 2, true);
+            ctx.fill('nonzero');
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="200" height="100">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
