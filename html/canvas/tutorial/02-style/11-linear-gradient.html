@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Linear Gradient</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            // Create gradients
+            const lingrad = ctx.createLinearGradient(0, 0, 0, 150);
+            lingrad.addColorStop(0, 'deepskyblue');
+            lingrad.addColorStop(0.5, 'white');
+            lingrad.addColorStop(0.5, 'limegreen');
+            lingrad.addColorStop(1, 'white');
+
+            const lingrad2 = ctx.createLinearGradient(0, 50, 0, 95);
+            lingrad2.addColorStop(0.5, 'black');
+            lingrad2.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            // assign gradients to fill and stroke styles
+            ctx.fillStyle = lingrad;
+            ctx.strokeStyle = lingrad2;
+
+            // draw shapes
+            ctx.fillRect(10, 10, 130, 130);
+            ctx.strokeRect(50, 50, 50, 50);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
