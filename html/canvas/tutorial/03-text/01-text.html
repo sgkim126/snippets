@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.font = '48px serif';
+
+            ctx.fillText('Hello world', 10, 50);
+
+            ctx.strokeText('Hello world', 10, 100);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="250" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
