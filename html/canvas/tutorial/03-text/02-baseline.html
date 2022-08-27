@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Baseline</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.font = '48px serif';
+
+            ctx.strokeText('A', 0, 50);
+            ctx.textBaseline = "top";
+            ctx.strokeText('A', 30, 50);
+            ctx.textBaseline = "hanging";
+            ctx.strokeText('A', 60, 50);
+            ctx.textBaseline = "middle";
+            ctx.strokeText('A', 90, 50);
+            ctx.textBaseline = "alphabetic";
+            ctx.strokeText('A', 120, 50);
+            ctx.textBaseline = "ideographic";
+            ctx.strokeText('A', 150, 50);
+            ctx.textBaseline = "bottom";
+            ctx.strokeText('A', 180, 50);
+            ctx.textBaseline = "top";
+            ctx.strokeText('A', 210, 50);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="550" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
