@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rotation</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            // left rectangles, rotate from canvas origin
+            ctx.save();
+            // blue rect
+            ctx.fillStyle = 'dodgerblue';
+            ctx.fillRect(30, 30, 100, 100);
+            ctx.rotate((Math.PI / 180) * 25);
+            // grey rect
+            ctx.fillStyle = 'dimgray';
+            ctx.fillRect(30, 30, 100, 100);
+            ctx.restore();
+
+            // right rectangles, rotate from rectangle center
+            // draw blue rect
+            ctx.fillStyle = 'dodgerblue';
+            ctx.fillRect(150, 30, 100, 100);
+
+            ctx.translate(200, 80); // translate to rectangle center
+                                    // x = x + 0.5 * width
+                                    // y = y + 0.5 * height
+            ctx.rotate((Math.PI / 180) * 25); // rotate
+            ctx.translate(-200, -80); // translate back
+
+            // draw grey rect
+            ctx.fillStyle = 'dimgray';
+            ctx.fillRect(150, 30, 100, 100);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
