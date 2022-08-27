@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scaling</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            ctx.font = '48px serif';
+
+            // mirror vertically
+            ctx.save();
+            ctx.scale(1, -1);
+            ctx.fillText('MDN', 10, -10);
+            ctx.restore();
+
+            // mirror horizontally
+            ctx.scale(-1, 1);
+            ctx.fillText('MDN', -135, 120);
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="150" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
