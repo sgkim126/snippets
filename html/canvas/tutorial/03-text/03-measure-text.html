@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>measureText</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function draw() {
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.font = '48px serif';
+
+            const string = 'Hello world';
+            let x = 10;
+            for (let char of string) {
+                ctx.fillStyle = random_color();
+                ctx.fillText(char, x, 100);
+                x += ctx.measureText(char).width;
+            }
+        }
+
+        function random_color() {
+            const r = parseInt(String(Math.random() * 255));
+            const g = parseInt(String(Math.random() * 255));
+            const b = parseInt(String(Math.random() * 255));
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
+</head>
+<body onload="draw();">
+<canvas id="tutorial" width="250" height="150">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
