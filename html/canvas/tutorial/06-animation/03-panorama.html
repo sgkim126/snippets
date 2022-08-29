@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Panorama</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        const img = new Image();
+
+        const canvasXSize = 800;
+        const canvasYSize = 200;
+        const interval = 10; // lower is faster
+        const scale = 1.05;
+        const y = -4.5; // vertical offset
+
+        // Main program
+        const dx = 0.75;
+        let imgW;
+        let imgH;
+        let x = 0;
+        let clearX;
+        let clearY;
+        let ctx;
+
+        function init() {
+            // Get canvas context
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            ctx = canvas.getContext('2d');
+
+            img.onload = () => {
+                imgW = img.width * scale;
+                imgH = img.height * scale;
+
+                if (imgW > canvasXSize) {
+                    // Image larger than canvas
+                    x = canvasXSize - imgW;
+                }
+
+                // Check if image dimension is larger than canvas
+                clearX = Math.max(imgW, canvasXSize);
+                clearY = Math.max(imgH, canvasYSize);
+
+                // Set refresh rate
+                return setInterval(draw, interval);
+            }
+
+            // User Variables - customize these to change the image being scrolled, its
+            // direction, and the speed.
+            img.src = 'capitan_meadows_yosemite_national_park.jpg';
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, clearX, clearY); // clear the canvas
+
+            // If image is <= canvas size
+            if (imgW <= canvasXSize) {
+                // Reset, start from beginning
+                if (x > canvasXSize) {
+                    x = -imgW + x;
+                }
+
+                // Draw additional image1
+                if (x > 0) {
+                    // ctx.drawImage(img, -imgW + x, y, imgW, imgH);
+                }
+
+                // Draw additional image2
+                if (x - imgW > 0) {
+                    ctx.drawImage(img, -imgW * 2 + x, y, imgW, imgH);
+                }
+            } else {
+                // Image is > canvas size
+                // Reset, start from beginning
+                if (x > canvasXSize) {
+                    x = canvasXSize - imgW;
+                }
+
+                // Draw additional image
+                if (x > canvasXSize - imgW) {
+                    ctx.drawImage(img, x - imgW + 1, y, imgW, imgH);
+                }
+            }
+
+            // Draw image
+            ctx.drawImage(img, x, y, imgW, imgH);
+
+            // Amount to move
+            x += dx;
+        }
+    </script>
+</head>
+<body onload="init();">
+<canvas id="tutorial" width="800" height="200">
+    This browser doesn't support canvas. Please use another browser.
+</canvas>
+</body>
+</html>
