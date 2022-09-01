@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Selected Color</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+        function init() {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.src = 'https://raw.githubusercontent.com/mdn/dom-examples/main/canvas/pixel-manipulation/assets/rhino.jpg';
+            const canvas = document.getElementById('tutorial');
+            if (canvas.getContext == null) {
+                return;
+            }
+            const ctx = canvas.getContext('2d');
+
+            img.addEventListener('load', () => {
+                ctx.drawImage(img, 0, 0);
+                img.style.display = 'none';
+            });
+
+            function pick(event, destination) {
+                const bounding = canvas.getBoundingClientRect();
+                const x = event.clientX - bounding.left;
+                const y = event.clientY - bounding.top;
+                const pixel = ctx.getImageData(x, y, 1, 1);
+                const [red, green, blue, alpha] = pixel.data;
+
+                const rgba = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
+                destination.style.background = rgba;
+                destination.textContent = rgba;
+
+                return rgba;
+            }
+
+            const hoveredColor = document.getElementById('hovered-color');
+            canvas.addEventListener('mousemove', event => pick(event, hoveredColor));
+
+            const selectedColor = document.getElementById('selected-color');
+            canvas.addEventListener('click', event => pick(event, selectedColor));
+        }
+    </script>
+</head>
+<body onload="init();">
+<table>
+    <thead>
+    <tr>
+        <th>source</th>
+        <th style="width:150px;">Hovered Color</th>
+        <th style="width:150px;">Selected Color</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <canvas id="tutorial" width="300" height="227">
+                This browser doesn't support canvas. Please use another browser.
+            </canvas>
+        </td>
+        <td style="text-align: center; color: white;" id="hovered-color"></td>
+        <td style="text-align: center; color: white;" id="selected-color"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
