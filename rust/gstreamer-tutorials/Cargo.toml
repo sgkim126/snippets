@@ -1,0 +1,92 @@
+[package]
+name = "gstreamer-tutorials"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "basic-1"
+path = "./src/basic-1.rs"
+
+[[bin]]
+name = "basic-2"
+path = "./src/basic-2.rs"
+
+[[bin]]
+name = "basic-3"
+path = "./src/basic-3.rs"
+
+[[bin]]
+name = "basic-4"
+path = "./src/basic-4.rs"
+
+[[bin]]
+name = "basic-5"
+path = "./src/basic-5.rs"
+required-features = ["basic-5"]
+
+[[bin]]
+name = "basic-6"
+path = "./src/basic-6.rs"
+
+[[bin]]
+name = "basic-7"
+path = "./src/basic-7.rs"
+
+[[bin]]
+name = "basic-8"
+path = "./src/basic-8.rs"
+required-features = ["gstreamer-audio"]
+
+[[bin]]
+name = "basic-9"
+path = "./src/basic-9.rs"
+required-features = ["gstreamer-pbutils"]
+
+[[bin]]
+name = "basic-12"
+path = "./src/basic-12.rs"
+
+[[bin]]
+name = "basic-13"
+path = "./src/basic-13.rs"
+
+[[bin]]
+name = "playback-1"
+path = "./src/playback-1.rs"
+
+[[bin]]
+name = "playback-2"
+path = "./src/playback-2.rs"
+
+[[bin]]
+name = "playback-3"
+path = "./src/playback-3.rs"
+required-features = ["gstreamer-audio"]
+
+[[bin]]
+name = "playback-4"
+path = "./src/playback-4.rs"
+
+[[bin]]
+name = "playback-5"
+path = "./src/playback-5.rs"
+required-features = ["gstreamer-video"]
+
+[[bin]]
+name = "playback-6"
+path = "./src/playback-6.rs"
+
+[[bin]]
+name = "playback-7"
+path = "./src/playback-7.rs"
+
+[dependencies]
+gdkx11 = { version = "0.16", optional = true }
+gstreamer = "0.19"
+gstreamer-audio = { version = "0.19", optional = true }
+gstreamer-pbutils = { version = "0.19", optional = true }
+gstreamer-video = { version = "0.19", optional = true }
+gtk = { version = "0.16", optional = true }
+
+[features]
+basic-5 = ["gtk", "gstreamer-video", "gdkx11"]
