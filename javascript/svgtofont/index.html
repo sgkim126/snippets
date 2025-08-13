@@ -46,7 +46,10 @@
 document.currentScript.insertAdjacentHTML('afterEnd', ['arrow-up', 'circle', 'cross', 'star'].map(keyword => {
   return `
   <section>
-    <h2>${keyword}</h2>
+    <div>
+      <img src='./src/${keyword}.svg' alt='${keyword}'>
+      <code>img</code>
+    </div>
     <div>
       <i class='icon-prefix-${keyword} icon'></i>
       <code>.icon-prefix-${keyword}</code>
