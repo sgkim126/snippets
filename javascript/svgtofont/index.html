@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Icon Font</title>
+  <link rel='stylesheet' href='./dist/testIcons.css'>
+  <style>
+    section {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      max-width: 760px;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      gap: 16px;
+    }
+    div {
+      gap: 4px;
+      font-size: 20px;
+    }
+
+    .test-icon {
+      font-family: 'testIcons';
+      font-variant-ligatures: common-ligatures discretionary-ligatures;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1;
+    }
+
+    :root {
+      --icon-color: black;
+      --icon-size: 20px;
+    }
+
+    .icon {
+      color: var(--icon-color);
+      font-size: var(--icon-size);
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body>
+<script>
+document.currentScript.insertAdjacentHTML('afterEnd', ['arrow-up', 'circle', 'cross', 'star'].map(keyword => {
+  return `
+  <section>
+    <h2>${keyword}</h2>
+    <div>
+      <i class='icon-prefix-${keyword} icon'></i>
+      <code>.icon-prefix-${keyword}</code>
+    </div>
+    <div>
+      <span class='test-icon icon'>${keyword}</span>
+      <code>font-family: 'testIcons'</code>
+    </div>
+  </section>`;
+}).join('\n'));
+</script>
+<input type='color' id='icon-color'>
+<input type='number' id='icon-size' min='1' max='100' value='20' step='1'>
+<script>
+document.getElementById('icon-color').addEventListener('input', (e) => {
+  document.documentElement.style.setProperty('--icon-color', e.target.value);
+});
+document.getElementById('icon-size').addEventListener('input', (e) => {
+  document.documentElement.style.setProperty('--icon-size', `${e.target.value}px`);
+});
+</script>
+</body>
+</html>

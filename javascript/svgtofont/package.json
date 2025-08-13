@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "test": "svgtofont --config svgtofont.config.json --sources src --output dist"
+  },
+  "devDependencies": {
+    "svgtofont": "^6.4.0"
+  }
+}
