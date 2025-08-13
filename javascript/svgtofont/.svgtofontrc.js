@@ -8,7 +8,9 @@ export default {
   css: true,
   svgicons2svgfont: {
     normalize: true,
-    fontHeight: 1000
+    fontHeight: 1000,
+    ascent: 850,
+    descent: 150
   },
   addLigatures: true
 }
