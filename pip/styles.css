@@ -1,0 +1,163 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background-color: steelblue;
+  --clicked-color: salmon;
+  --canvas-width: 300px;
+  --canvas-height: 200px;
+  --canvas-radius: 6px;
+  --size-control-height: 32px;
+  --base-x: 0px;
+  --base-y: 0px;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#background {
+  width: 100vw;
+  height: 100vh;
+  background: var(--background-color);
+}
+
+#background.is-flashing {
+  animation: background-flash 1s linear;
+}
+
+@keyframes background-flash {
+  from {
+    background: var(--clicked-color);
+  }
+
+  to {
+    background: var(--background-color);
+  }
+}
+
+.canvas-item {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  transform: translate(
+    -50%,
+    -50%
+  ) translate(
+    calc(var(--base-x) + var(--x, 0px)),
+    calc(var(--base-y) + var(--y, 0px))
+  );
+  z-index: 1;
+  cursor: grab;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.canvas-item.drag-area-includes-size-controls {
+  height: calc(var(--canvas-height) + var(--size-control-height));
+}
+
+.canvas-item.is-dragging {
+  cursor: grabbing;
+}
+
+.canvas-controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: var(--canvas-radius) 0 var(--canvas-radius) var(--canvas-radius);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.canvas-item:hover .canvas-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.canvas-item.drag-area-includes-size-controls .canvas-controls {
+  inset: var(--size-control-height) 0 0 0;
+}
+
+.canvas-controls button {
+  min-width: 44px;
+  border: 0;
+  padding: 8px 12px;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.canvas-item.is-playing .play-button,
+.canvas-item.is-paused .pause-button {
+  display: none;
+}
+
+.size-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  overflow: hidden;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 8px 8px 0 0;
+  pointer-events: auto;
+  transform: translateY(-100%);
+}
+
+.canvas-item.drag-area-includes-size-controls .size-controls {
+  transform: none;
+}
+
+.size-controls button {
+  width: 32px;
+  height: var(--size-control-height);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.canvas-item.hide-size-controls-while-dragging.is-dragging .size-controls {
+  display: none;
+}
+
+.canvas-item.hide-size-controls-while-dragging.is-dragging .canvas-controls,
+.canvas-item.hide-size-controls-while-dragging.is-dragging .tetrahedron-canvas {
+  border-radius: var(--canvas-radius);
+}
+
+.tetrahedron-canvas {
+  display: block;
+  width: var(--canvas-width);
+  height: var(--canvas-height);
+  background: black;
+  border-radius: var(--canvas-radius) 0 var(--canvas-radius) var(--canvas-radius);
+}
+
+.canvas-item.drag-area-includes-size-controls .tetrahedron-canvas {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
