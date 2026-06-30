@@ -121,7 +121,6 @@ function projectPoint(canvasElement, point) {
 const tetrahedronPalettes = [
   ["darkred", "crimson", "tomato", "salmon"],
   ["darkgreen", "seagreen", "limegreen", "palegreen"],
-  ["navy", "royalblue", "deepskyblue", "lightskyblue"],
 ];
 canvasItems.forEach((item, index) => {
   const canvasElement = item.querySelector(".tetrahedron-canvas");
