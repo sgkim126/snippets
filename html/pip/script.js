@@ -139,6 +139,9 @@ canvasItems.forEach((item, index) => {
   let currentY = 0;
   let canvasWidth = 300;
   let canvasHeight = 200;
+  let didDrag = false;
+  let activeSizeButton = null;
+  let suppressNextSizeClick = false;
 
   function clampValue(value, min, max) {
     if (min > max) {
@@ -210,14 +213,6 @@ canvasItems.forEach((item, index) => {
     event.stopPropagation();
   });
 
-  growButton.addEventListener("pointerdown", (event) => {
-    event.stopPropagation();
-  });
-
-  shrinkButton.addEventListener("pointerdown", (event) => {
-    event.stopPropagation();
-  });
-
   playButton.addEventListener("click", (event) => {
     event.stopPropagation();
     controls.play();
@@ -234,11 +229,29 @@ canvasItems.forEach((item, index) => {
 
   growButton.addEventListener("click", (event) => {
     event.stopPropagation();
+    if (suppressNextSizeClick) {
+      suppressNextSizeClick = false;
+      return;
+    }
+
+    if (didDrag) {
+      return;
+    }
+
     resizeCanvas(Math.min(canvasWidth + 30, 540));
   });
 
   shrinkButton.addEventListener("click", (event) => {
     event.stopPropagation();
+    if (suppressNextSizeClick) {
+      suppressNextSizeClick = false;
+      return;
+    }
+
+    if (didDrag) {
+      return;
+    }
+
     resizeCanvas(Math.max(canvasWidth - 30, 150));
   });
 
@@ -247,6 +260,8 @@ canvasItems.forEach((item, index) => {
     startPointerY = event.clientY;
     startX = currentX;
     startY = currentY;
+    didDrag = false;
+    activeSizeButton = event.target.closest(".grow-button, .shrink-button");
     item.classList.add("is-dragging");
     item.setPointerCapture(event.pointerId);
   });
@@ -256,6 +271,13 @@ canvasItems.forEach((item, index) => {
       return;
     }
 
+    if (
+      Math.abs(event.clientX - startPointerX) > 3 ||
+      Math.abs(event.clientY - startPointerY) > 3
+    ) {
+      didDrag = true;
+    }
+
     setPosition(
       startX + event.clientX - startPointerX,
       startY + event.clientY - startPointerY
@@ -263,11 +285,23 @@ canvasItems.forEach((item, index) => {
   });
 
   item.addEventListener("pointerup", (event) => {
+    if (!didDrag && activeSizeButton) {
+      suppressNextSizeClick = true;
+
+      if (activeSizeButton === growButton) {
+        resizeCanvas(Math.min(canvasWidth + 30, 540));
+      } else {
+        resizeCanvas(Math.max(canvasWidth - 30, 150));
+      }
+    }
+
+    activeSizeButton = null;
     item.classList.remove("is-dragging");
     item.releasePointerCapture(event.pointerId);
   });
 
   item.addEventListener("pointercancel", (event) => {
+    activeSizeButton = null;
     item.classList.remove("is-dragging");
 
     if (item.hasPointerCapture(event.pointerId)) {
